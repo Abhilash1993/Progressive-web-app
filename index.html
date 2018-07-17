@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#f44336">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f44336">
+    <meta name="msapplication-TileColor" content="#f44336">
+
+    <title>PWA</title>
+    <link rel="stylesheet" href="/dist/style.css" charset="utf-8">
+    <link rel="manifest" href="manifest.json">
+    <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzZWkUZ8b9Bguc3bx2BkKsRbNjdNGcwDE&libraries=places"></script>-->
+    <!--<script type="text/javascript" src="https://js.stripe.com/v2/"></script>-->
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').then(function(registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        Notification.requestPermission(function(status) {
+            console.log('Notification permission status:', status);
+            if (Notification.permission == 'granted') {
+            navigator.serviceWorker.getRegistration().then(function(reg) {
+  //             var options = {
+  //   body: 'Here is a notification body!',
+  //   icon: 'images/1.jpg',
+  //   vibrate: [100, 50, 100],
+  //   data: {
+  //     dateOfArrival: Date.now(),
+  //     primaryKey: 1
+  //   },
+  //   actions: [
+  //     {action: 'explore', title: 'Explore this new world',
+  //       icon: 'images/1.jpg'},
+  //     {action: 'close', title: 'Close notification',
+  //       icon: 'images/1.jpg'},
+  //   ]
+  // };
+  // registration.showNotification('Hello world!', options);
+            });
+          }
+        });
+        registration.pushManager.getSubscription().then(function(sub) {
+      if (sub === null) {
+        // Update UI to ask user to register for Push
+        subscribeUser();
+        console.log('Not subscribed to push service!');
+      } else {
+        // We have a subscription, update the database
+        console.log('Subscription object: ', sub);
+      }
+      });
+
+      }, function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      }).catch(function(err) {
+        console.log(err)
+      });
+    });
+
+  } else {
+    console.log('service worker is not supported');
+  }
+  function subscribeUser() {
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.ready.then(function(reg) {
+
+  reg.pushManager.subscribe({
+    userVisibleOnly: true
+  }).then(function(sub) {
+    console.log('Endpoint URL: ', sub.endpoint);
+  }).catch(function(e) {
+    if (Notification.permission === 'denied') {
+      console.warn('Permission for notifications was denied');
+    } else {
+      console.error('Unable to subscribe to push', e);
+    }
+  });
+})
+}
+}
+</script>
+    <script type="text/javascript" src="/dist/bundle.js"></script>
+</html>
