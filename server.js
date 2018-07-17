@@ -45,6 +45,5 @@ app.get('*', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(config.PORT , () => {
-  console.log('App running on' + config.PORT);
-});
+app.listen(process.env.PORT || 8080);
+console.log("Listening on PORT "+ (process.env.PORT || 8080));
