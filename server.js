@@ -9,7 +9,9 @@ const compress = require('compression');
 const auth = require('http-auth');
 const path = require('path');
 const compression = require('compression');
-const config = require('./config/config.js');
+const config = {
+  PORT : 8080
+};
 
 //to throw uncaught exception error
 process.on('uncaughtException',  (exception) => {
@@ -43,6 +45,6 @@ app.get('*', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(config.PORT, () => {
+app.listen(config.PORT , () => {
   console.log('App running on' + config.PORT);
 });
